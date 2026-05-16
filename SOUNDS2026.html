@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Soulful Sounds | Feel‑Good Music & Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0f0f12 0%, #1a1a24 100%);
+            color: #ece8e1;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3.2rem;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(243,156,18,0.2);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #f5a65b;
+            border-top: 2px solid #e67e22;
+            border-bottom: 2px solid #e67e22;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+        }
+
+        /* Main grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 0.9fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 780px) {
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(25, 25, 35, 0.9);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+            border: 1px solid rgba(243,156,18,0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(243,156,18,0.4);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #f5a65b;
+            border-left: 5px solid #f39c12;
+            padding-left: 1rem;
+        }
+
+        /* Player */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .playlist {
+            margin-top: 1rem;
+        }
+
+        .playlist h3 {
+            color: #f5a65b;
+            margin-bottom: 0.8rem;
+        }
+
+        .song-item {
+            background: rgba(35, 35, 45, 0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.6rem 0;
+            border-radius: 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            border: 1px solid rgba(243,156,18,0.2);
+        }
+
+        .song-item:hover {
+            background: rgba(243,156,18,0.15);
+            transform: scale(1.01);
+            border-color: rgba(243,156,18,0.5);
+        }
+
+        .song-item.active {
+            background: rgba(243,156,18,0.25);
+            border-color: #f39c12;
+            box-shadow: 0 4px 15px rgba(243,156,18,0.2);
+        }
+
+        .song-title {
+            font-weight: 600;
+            color: #ece8e1;
+        }
+
+        .play-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .play-btn:hover {
+            background: #f39c12;
+            transform: scale(1.05);
+        }
+
+        /* Comments */
+        .comment-list {
+            max-height: 280px;
+            overflow-y: auto;
+            margin-bottom: 1.2rem;
+            padding-right: 0.5rem;
+        }
+
+        .comment-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .comment-list::-webkit-scrollbar-track {
+            background: #2a2a35;
+            border-radius: 10px;
+        }
+        .comment-list::-webkit-scrollbar-thumb {
+            background: #e67e22;
+            border-radius: 10px;
+        }
+
+        .comment {
+            background: rgba(35, 35, 45, 0.8);
+            border-radius: 1.2rem;
+            padding: 0.7rem 1rem;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            border-left: 4px solid #f39c12;
+        }
+
+        .comment-name {
+            font-weight: bold;
+            color: #f5a65b;
+            font-size: 0.85rem;
+        }
+
+        .comment-text {
+            margin-top: 0.2rem;
+            color: #e0dbd1;
+        }
+
+        .comment-date {
+            font-size: 0.7rem;
+            color: #9e8b72;
+            text-align: right;
+            margin-top: 0.4rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #3a3a4a;
+            border-radius: 2rem;
+            background: #1e1e28;
+            color: #ece8e1;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #f39c12;
+            box-shadow: 0 0 0 2px rgba(243,156,18,0.2);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #6a6a7a;
+        }
+
+        button {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        button:hover {
+            background: #f39c12;
+            transform: scale(0.98);
+        }
+
+        .rec-section {
+            margin-top: 2rem;
+        }
+
+        .rec-list {
+            background: rgba(30, 30, 40, 0.8);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .rec-item {
+            border-bottom: 1px solid rgba(243,156,18,0.2);
+            padding: 0.7rem 0;
+        }
+
+        .rec-item:last-child {
+            border-bottom: none;
+        }
+
+        .rec-song {
+            font-weight: bold;
+            color: #f5a65b;
+        }
+
+        .status {
+            font-size: 0.7rem;
+            background: rgba(243,156,18,0.2);
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            margin-left: 0.5rem;
+            color: #f5a65b;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #9e8b72;
+            font-size: 0.85rem;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2a2a35;
+            color: #f5a65b;
+            padding: 0.6rem 1.5rem;
+            border-radius: 3rem;
+            font-size: 0.9rem;
+            z-index: 999;
+            opacity: 0;
+            transition: 0.2s;
+            pointer-events: none;
+            border: 1px solid rgba(243,156,18,0.3);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>✨ Soulful Sounds ✨</h1>
+        <div class="tagline">🎵 feel‑good frequencies • good vibes only 🎵</div>
+    </div>
+
+    <div class="grid">
+        <!-- LEFT COLUMN: MUSIC PLAYER & PLAYLIST -->
+        <div class="card">
+            <h2>🎧 now playing</h2>
+            <div class="video-wrapper" id="youtubePlayer">
+                <iframe id="ytFrame" src="https://www.youtube.com/embed/6EJSP1bxTjE?autoplay=0&enablejsapi=1" 
+                        title="YouTube player" frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen></iframe>
+            </div>
+
+            <div class="playlist">
+                <h3>📀 feel‑good playlist</h3>
+                <div id="playlistContainer"></div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: COMMENTS -->
+        <div class="card">
+            <h2>💬 community corner</h2>
+            <div id="commentsSection">
+                <div class="comment-list" id="commentList"></div>
+                <input type="text" id="commentName" placeholder="your name (or 'Sunny soul')" maxlength="30">
+                <textarea id="commentMsg" rows="2" placeholder="what does this song make you feel? 🎶"></textarea>
+                <button id="postCommentBtn">💖 post comment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECOMMENDATIONS SECTION (full width) -->
+    <div class="card rec-section">
+        <h2>🎁 song recommendations</h2>
+        <p style="margin-bottom: 0.5rem; color: #b8af9f;">got a feel‑good track? drop it here and spread the joy →</p>
+        <input type="text" id="recSong" placeholder="song title + artist" style="width: calc(100% - 110px); display: inline-block; margin-right: 10px;">
+        <button id="submitRecBtn">✨ recommend</button>
+        <div id="recommendationsList" class="rec-list"></div>
+    </div>
+    <div class="footer">
+        🌞 every song plants a little happiness — add your voice & keep the soulful sounds alive
+    </div>
+</div>
+<div id="toastMsg" class="toast-msg"></div>
+
+<script>
+    // ---------- SOULFUL PLAYLIST (YouTube video IDs) ----------
+    const playlist = [
+        { id: "6EJSP1bxTjE", title: "Bob Marley - Three Little Birds" },
+        { id: "y6Sxv-sUYtM", title: "Pharrell Williams - Happy" },
+        { id: "ZbZSe6N_BXs", title: "Louis Armstrong - What A Wonderful World" },
+        { id: "XqZsoesa55w", title: "Jack Johnson - Better Together" },
+        { id: "hTWKbfoikeg", title: "Nahko And Medicine For The People - Aloha Ke Akua" },
+        { id: "VvBxCyR2d2Q", title: "India.Arie - I Am Light" }
+    ];
+
+    let currentSongIndex = 0;
+
+    // DOM elements
+    const ytFrame = document.getElementById('ytFrame');
+    const playlistContainer = document.getElementById('playlistContainer');
+    const commentListDiv = document.getElementById('commentList');
+    const postBtn = document.getElementById('postCommentBtn');
+    const submitRecBtn = document.getElementById('submitRecBtn');
+    const recSongInput = document.getElementById('recSong');
+    const recommendationsList = document.getElementById('recommendationsList');
+    const toastMsgDiv = document.getElementById('toastMsg');
+
+    // ---- Helper toast ----
+    function showToast(msg, duration = 2000) {
+        toastMsgDiv.innerText = msg;
+        toastMsgDiv.style.opacity = '1';
+        setTimeout(() => {
+            toastMsgDiv.style.opacity = '0';
+        }, duration);
+    }
+
+    // ---- Load / save comments (localStorage) ----
+    function loadComments() {
+        const stored = localStorage.getItem('soulful_comments');
+        if (stored) {
+            return JSON.parse(stored);
+        }
+        // default feel-good comments
+        return [
+            { name: "Sunny Soul", text: "This makes my heart dance! 🌞", date: new Date().toLocaleString() },
+            { name: "Melody Dreamer", text: "Pure therapy. adding this to my morning routine ✨", date: new Date().toLocaleString() }
+        ];
+    }
+
+    function saveComments(comments) {
+        localStorage.setItem('soulful_comments', JSON.stringify(comments));
+    }
+
+    function renderComments() {
+        const comments = loadComments();
+        if (!commentListDiv) return;
+        if (comments.length === 0) {
+            commentListDiv.innerHTML = '<div class="comment">✨ no comments yet — be the first to spread love ✨</div>';
+            return;
+        }
+        commentListDiv.innerHTML = comments.map(c => `
+            <div class="comment">
+                <div class="comment-name">🌸 ${escapeHtml(c.name)}</div>
+                <div class="comment-text">${escapeHtml(c.text)}</div>
+                <div class="comment-date">${c.date}</div>
+            </div>
+        `).join('');
+    }
+
+    function addComment(name, text) {
+        if (!name.trim() || !text.trim()) {
+            showToast("please add your name & a little vibe message 🧡");
+            return false;
+        }
+        const comments = loadComments();
+        comments.unshift({ name: name.trim().substring(0,30), text: text.trim().substring(0,300), date: new Date().toLocaleString() });
+        if (comments.length > 50) comments.pop();
+        saveComments(comments);
+        renderComments();
+        return true;
+    }
+
+    // ---- Recommendations logic ----
+    function loadRecommendations() {
+        const stored = localStorage.getItem('soulful_recs');
+        if (stored) return JSON.parse(stored);
+        return [
+            { song: "Put Your Records On - Corinne Bailey Rae", status: "🎧 community fav", date: new Date().toLocaleDateString() }
+        ];
+    }
+
+    function saveRecommendations(recs) {
+        localStorage.setItem('soulful_recs', JSON.stringify(recs));
+    }
+
+    function renderRecommendations() {
+        const recs = loadRecommendations();
+        if (!recommendationsList) return;
+        if (recs.length === 0) {
+            recommendationsList.innerHTML = '<div style="padding: 0.7rem;">✨ no recommendations yet — be the first to suggest ✨</div>';
+            return;
+        }
+        recommendationsList.innerHTML = recs.map(r => `
+            <div class="rec-item">
+                <div class="rec-song">🎵 ${escapeHtml(r.song)}</div>
+                <div><span class="status">${escapeHtml(r.status) || 'pending 💭'}</span></div>
+            </div>
+        `).join('');
+    }
+
+    function addRecommendation(songTitle) {
+        if (!songTitle.trim()) {
+            showToast("please write a song name + artist 🎶");
+            return false;
+        }
+        const recs = loadRecommendations();
+        recs.unshift({ song: songTitle.trim().substring(0, 80), status: "🌟 suggested just now", date: new Date().toLocaleDateString() });
+        if (recs.length > 30) recs.pop();
+        saveRecommendations(recs);
+        renderRecommendations();
+        showToast(`✨ "${songTitle.substring(0,40)}" added to recommendations!`);
+        return true;
+    }
+
+    // simple escape to avoid XSS
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // ---- Player functions ----
+    function updatePlayer(index) {
+        if (index >= 0 && index < playlist.length) {
+            currentSongIndex = index;
+            const videoId = playlist[currentSongIndex].id;
+            ytFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&enablejsapi=1`;
+            renderPlaylistHighlight();
+            showToast(`🎵 now playing: ${playlist[currentSongIndex].title}`);
+        }
+    }
+
+    function renderPlaylistHighlight() {
+        if (!playlistContainer) return;
+        playlistContainer.innerHTML = playlist.map((song, idx) => `
+            <div class="song-item ${idx === currentSongIndex ? 'active' : ''}">
+                <span class="song-title">🎼 ${escapeHtml(song.title)}</span>
+                <button class="play-btn" data-index="${idx}">▶ play</button>
+            </div>
+        `).join('');
+
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                if (!isNaN(idx)) updatePlayer(idx);
+                e.stopPropagation();
+            });
+        });
+    }
+
+    // ---- Event listeners ----
+    postBtn.addEventListener('click', () => {
+        const nameInput = document.getElementById('commentName');
+        const msgInput = document.getElementById('commentMsg');
+        if (addComment(nameInput.value, msgInput.value)) {
+            nameInput.value = '';
+            msgInput.value = '';
+        }
+    });
+
+    submitRecBtn.addEventListener('click', () => {
+        if (addRecommendation(recSongInput.value)) {
+            recSongInput.value = '';
+        }
+    });
+
+    recSongInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (addRecommendation(recSongInput.value)) recSongInput.value = '';
+        }
+    });
+
+    // ---- initialize everything ----
+    function init() {
+        renderPlaylistHighlight();
+        renderComments();
+        renderRecommendations();
+        updatePlayer(0);
+        
+        const checkComments = loadComments();
+        if (checkComments.length === 0) {
+            const defaultComments = [
+                { name: "Sunny Soul", text: "This makes my heart dance! 🌞", date: new Date().toLocaleString() },
+                { name: "Melody Dreamer", text: "Pure therapy. adding this to my morning routine ✨", date: new Date().toLocaleString() }
+            ];
+            saveComments(defaultComments);
+            renderComments();
+        }
+        const checkRecs = loadRecommendations();
+        if (checkRecs.length === 0) {
+            saveRecommendations([{ song: "Here Comes The Sun - The Beatles", status: "✨ classic joy", date: new Date().toLocaleDateString() }]);
+            renderRecommendations();
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>
